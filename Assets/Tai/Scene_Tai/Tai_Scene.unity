@@ -734,7 +734,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1df6b9c697409345bfb46aa80526584, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 0
+  maxHP: 100
   currentHP: 0
 --- !u!114 &1336887473
 MonoBehaviour:
@@ -754,8 +754,8 @@ MonoBehaviour:
   originalePosition: {x: 0, y: 0, z: 0}
   maxDistance: 50
   health_: {fileID: 1336887472}
-  animator: {fileID: 0}
-  damageZone: {fileID: 0}
+  animator: {fileID: 1336887475}
+  damageZone: {fileID: 429942106}
   currentState: 0
 --- !u!195 &1336887474
 NavMeshAgent:
@@ -779,6 +779,11 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!95 &1336887475 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 924104645172727949, guid: 887892bfa2741064a9f1a642a0522be9, type: 3}
+  m_PrefabInstance: {fileID: 1336887467}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1832765893
 PrefabInstance:
   m_ObjectHideFlags: 0
