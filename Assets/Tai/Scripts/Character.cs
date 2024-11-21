@@ -13,10 +13,9 @@ public class Character : MonoBehaviour
 
     public DamageZone damageZone;
 
-    public Health health;
+    public Health_ health_;
 
-    public GameObject sword;
-    public GameObject shield;
+
     //State Machine
     public enum CharacterState
     {
@@ -31,7 +30,7 @@ public class Character : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (health.currentHP <= 0)
+        if (health_.currentHP <= 0)
         {
             ChangeState(CharacterState.Die);
             return;

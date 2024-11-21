@@ -7,25 +7,25 @@ public class DamageZone : MonoBehaviour
 {
     public Collider damageCollider;
     public int damageAmount = 20;
-    public string targetTag = "Player";
+    public string targetTag;
     public List<Collider> colliderTarget = new List<Collider>();
 
-    public bool flag = false;
+    //public bool flag = false;
     void Start()
     {
         damageCollider.enabled = false;
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag(targetTag) && !colliderTarget.Contains(other) && !flag)
+        if (other.gameObject.CompareTag(targetTag) && !colliderTarget.Contains(other) /*&& !flag*/)
         {
             colliderTarget.Add(other);
-            var go = other.GetComponent<Health>();
+            var go = other.GetComponent<Health_>();
             if (go != null)
             {
                 go.TakeDamage(damageAmount);
             }
-            flag = true;
+            //flag = true;
         }
     }
     void OnTriggerEnter(Collider other)
@@ -33,7 +33,7 @@ public class DamageZone : MonoBehaviour
         if (other.gameObject.CompareTag(targetTag) && !colliderTarget.Contains(other))
         {
             colliderTarget.Add(other);
-            var go = other.GetComponent<Health>();
+            var go = other.GetComponent<Health_>();
             if (go != null)
             {
                 go.TakeDamage(damageAmount);
@@ -43,13 +43,13 @@ public class DamageZone : MonoBehaviour
     }
     public void BeginAttack()
     {
-        flag = true;
+        //flag = true;
         colliderTarget.Clear();
         damageCollider.enabled = true;
     }
     public void EndAttack()
     {
-        flag = false;
+        //flag = false;
         colliderTarget.Clear();
         damageCollider.enabled = false;
     }
