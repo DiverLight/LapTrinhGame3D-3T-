@@ -6,14 +6,14 @@ using UnityEngine.AI;
 public class ZombieScript : MonoBehaviour
 {
     public NavMeshAgent navMeshAgent;
-    public Transform target; // m?c tiêu
+    public Transform target; // m?c tiï¿½u
 
-    public float radius = 10f; // bán kính tìm ki?m m?c tiêu
-    public Vector3 originalePosition; // v? trí ban ??u
-    public float maxDistance = 50f; // kho?ng cách t?i ?a
-    public Health health;
+    public float radius = 10f; // bï¿½n kï¿½nh tï¿½m ki?m m?c tiï¿½u
+    public Vector3 originalePosition; // v? trï¿½ ban ??u
+    public float maxDistance = 50f; // kho?ng cï¿½ch t?i ?a
+    public Health_ health_;
 
-    public Animator animator; // khai báo component
+    public Animator animator; // khai bï¿½o component
 
     public DamageZone damageZone;
     // state machine
@@ -23,7 +23,7 @@ public class ZombieScript : MonoBehaviour
         Attack,
         Die
     }
-    public CharacterState currentState; // tr?ng thái hi?n t?i
+    public CharacterState currentState; // tr?ng thï¿½i hi?n t?i
 
 
     void Start()
@@ -34,7 +34,7 @@ public class ZombieScript : MonoBehaviour
 
     void Update()
     {
-        if (health.currentHP <= 0)
+        if (health_.currentHP <= 0)
         {
             ChangeState(CharacterState.Die);
         }
@@ -49,43 +49,43 @@ public class ZombieScript : MonoBehaviour
         {
             return;
         }
-        // kho?ng cách t? v? trí hi?n t?i ??n v? trí ban ??u
+        // kho?ng cï¿½ch t? v? trï¿½ hi?n t?i ??n v? trï¿½ ban ??u
         var distanceToOriginal = Vector3.Distance(originalePosition, transform.position);
-        // kho?ng cách t? v? trí hi?n t?i ??n m?c tiêu
+        // kho?ng cï¿½ch t? v? trï¿½ hi?n t?i ??n m?c tiï¿½u
         var distance = Vector3.Distance(target.position, transform.position);
         if (distance <= radius && distanceToOriginal <= maxDistance)
         {
-            // di chuy?n ??n m?c tiêu
+            // di chuy?n ??n m?c tiï¿½u
             navMeshAgent.SetDestination(target.position);
             animator.SetFloat("Speed", navMeshAgent.velocity.magnitude);
 
             distance = Vector3.Distance(target.position, transform.position);
             if (distance < 2f)
             {
-                // t?n công
+                // t?n cï¿½ng
                 ChangeState(CharacterState.Attack);
             }
         }
 
         if (distance > radius || distanceToOriginal > maxDistance)
         {
-            // quay v? v? trí ban ??u
+            // quay v? v? trï¿½ ban ??u
             navMeshAgent.SetDestination(originalePosition);
             animator.SetFloat("Speed", navMeshAgent.velocity.magnitude);
 
-            // chuy?n sang tr?ng thái ??ng yên
+            // chuy?n sang tr?ng thï¿½i ??ng yï¿½n
             distance = Vector3.Distance(originalePosition, transform.position);
             if (distance < 1f)
             {
                 animator.SetFloat("Speed", 0);
             }
 
-            // bình th??ng
+            // bï¿½nh th??ng
             ChangeState(CharacterState.Normal);
         }
     }
 
-    // chuy?n ??i tr?ng thái
+    // chuy?n ??i tr?ng thï¿½i
     private void ChangeState(CharacterState newState)
     {
         // exit current state
