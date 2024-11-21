@@ -5,17 +5,19 @@ using UnityEngine;
 public class Health_ : MonoBehaviour
 {
 
-    public float maxHP;
+    public float MaxHP;
     public float currentHP;
+
+
+    private void Start()
+    {
+        currentHP = MaxHP;
+    }
     public virtual void TakeDamage(float damage)
     {
         currentHP -= damage;
         currentHP = Mathf.Max(0, currentHP);
 
-    }
-    private void Start()
-    {
-        currentHP = maxHP;
     }
 }
 

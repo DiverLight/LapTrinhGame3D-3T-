@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class ZombieScript : MonoBehaviour
+public class EnemyAI : MonoBehaviour
 {
     public NavMeshAgent navMeshAgent;
-    public Transform target; // m?c ti�u
+    public Transform target; // mục tiêu
 
-    public float radius = 10f; // b�n k�nh t�m ki?m m?c ti�u
-    public Vector3 originalePosition; // v? tr� ban ??u
-    public float maxDistance = 50f; // kho?ng c�ch t?i ?a
-    public Health_ health_;
+    public float radius = 10f; // bán kính tìm kiếm mục tiêu
+    public Vector3 originalePosition; // vị trí ban đầu
+    public float maxDistance = 50f; // khoảng cách tối đa
 
-    public Animator animator; // khai b�o component
+    public Animator animator; // khai báo component
 
     public DamageZone damageZone;
+
+    public Health_ health_;
     // state machine
     public enum CharacterState
     {
@@ -23,12 +24,13 @@ public class ZombieScript : MonoBehaviour
         Attack,
         Die
     }
-    public CharacterState currentState; // tr?ng th�i hi?n t?i
+    public CharacterState currentState; // trạng thái hiện tại
 
 
     void Start()
     {
         originalePosition = transform.position;
+        navMeshAgent.SetDestination(target.position);
 
     }
 
@@ -38,6 +40,9 @@ public class ZombieScript : MonoBehaviour
         {
             ChangeState(CharacterState.Die);
         }
+        //Wander();
+
+        //Xoay huong nhin ve muc tieu
         if (target != null)
         {
             var lookPos = target.position - transform.position;
@@ -45,47 +50,49 @@ public class ZombieScript : MonoBehaviour
             var rotation = Quaternion.LookRotation(lookPos);
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 5);
         }
+
         if (currentState == CharacterState.Die)
         {
             return;
         }
-        // kho?ng c�ch t? v? tr� hi?n t?i ??n v? tr� ban ??u
+
+        // khoảng cách từ vị trí hiện tại đến vị trí ban đầu
         var distanceToOriginal = Vector3.Distance(originalePosition, transform.position);
-        // kho?ng c�ch t? v? tr� hi?n t?i ??n m?c ti�u
+        // khoảng cách từ vị trí hiện tại đến mục tiêu
         var distance = Vector3.Distance(target.position, transform.position);
         if (distance <= radius && distanceToOriginal <= maxDistance)
         {
-            // di chuy?n ??n m?c ti�u
+            // di chuyển đến mục tiêu
             navMeshAgent.SetDestination(target.position);
             animator.SetFloat("Speed", navMeshAgent.velocity.magnitude);
 
             distance = Vector3.Distance(target.position, transform.position);
             if (distance < 2f)
             {
-                // t?n c�ng
+                // tấn công
                 ChangeState(CharacterState.Attack);
             }
         }
 
         if (distance > radius || distanceToOriginal > maxDistance)
         {
-            // quay v? v? tr� ban ??u
+            // quay về vị trí ban đầu
             navMeshAgent.SetDestination(originalePosition);
             animator.SetFloat("Speed", navMeshAgent.velocity.magnitude);
 
-            // chuy?n sang tr?ng th�i ??ng y�n
+            // chuyển sang trạng thái đứng yên
             distance = Vector3.Distance(originalePosition, transform.position);
             if (distance < 1f)
             {
                 animator.SetFloat("Speed", 0);
             }
 
-            // b�nh th??ng
+            // bình thường
             ChangeState(CharacterState.Normal);
         }
     }
 
-    // chuy?n ??i tr?ng th�i
+    // chuyển đổi trạng thái
     private void ChangeState(CharacterState newState)
     {
         // exit current state
@@ -95,10 +102,6 @@ public class ZombieScript : MonoBehaviour
                 break;
             case CharacterState.Attack:
                 break;
-            case CharacterState.Die:
-                break;
-
-
         }
 
         // enter new state
@@ -113,35 +116,15 @@ public class ZombieScript : MonoBehaviour
                 break;
             case CharacterState.Die:
                 animator.SetTrigger("Die");
-                Destroy(gameObject, 5f);
+                Destroy(gameObject, 10f);
                 break;
-
-
-
-                // update current state
-
         }
+
+        // update current state
         currentState = newState;
-
     }
-    //public override void TakeDamage(float damage)
-    //{
-    //    base.TakeDamage(damage);
-    //    if(currentHP <= 0)
-    //    {
-    //        ChangeState(CharacterState.Die);
-    //    }
-    //}
-    //public void Wander()
-    //{
 
-    //    var randomDirection = Random.insideUnitSphere * radius;
-    //    randomDirection += originalePosition;
-    //    NavMeshHit hit;
-    //    NavMesh.SamplePosition(randomDirection, out hit, radius, 1);
-    //    var finalPosition = hit.position;
-    //    navMeshAgent.SetDestination(finalPosition);
-    //    animator.SetFloat("Speed", navMeshAgent.velocity.magnitude);
-    //}
+
+
 
 }
